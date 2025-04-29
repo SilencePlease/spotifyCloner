@@ -1,5 +1,6 @@
-- [] Authenticator einbauen
-- [] Playlist search
-- [] liked songs search
+- [X] Authenticator einbauen
+- [X] Playlist search
+- [x] Album search
+- [x] liked songs search
 - [] clone function
 - [] 
