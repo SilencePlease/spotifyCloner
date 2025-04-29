@@ -77,9 +77,7 @@ func main() {
 	personalPlaylists := make(map[string][]string)
 	nonPersonalPlaylists := make(map[string][]string)
 
-	//fmt.Println("\nDeine Playlists:")
 	for _, playlist := range playlists.Playlists {
-		//fmt.Printf("• %s (ID: %s)\n", playlist.Name, playlist.ID)
 
 		if playlist.Owner.ID == user.ID {
 			// Playlist-Items (Songs) abrufen
@@ -121,8 +119,6 @@ func main() {
 			nonPersonalPlaylists[playlist.Name] = nonPersonalSongIDs
 		}
 	}
-	fmt.Println("PersonalPlaylist:", personalPlaylists)
-	fmt.Println("NonPersonalPLaylist:", nonPersonalPlaylists)
 
 	// Get User's saved Albums
 	albums, err := client.CurrentUsersAlbums(context.Background())
@@ -130,13 +126,22 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("\nDeine Alben:", albums.Albums)
 	listOfAlbums := make(map[string][]string)
 	// In Map Speichern: Ablumname -> Ablum-Id
 	for _, album := range albums.Albums {
 		listOfAlbums[album.Name] = append(listOfAlbums[album.Name], string(album.ID))
 	}
 
+	// Get Users Liked Songs
+	songs, err := client.CurrentUsersTracks(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	listOfSongs := make(map[string][]string)
+	for _, song := range songs.Tracks {
+		listOfSongs[song.Name] = append(listOfSongs[song.Name], string(song.ID))
+	}
 }
 
 func completeAuth(w http.ResponseWriter, r *http.Request) {
