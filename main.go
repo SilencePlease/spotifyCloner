@@ -21,6 +21,7 @@ var (
 			spotifyauth.ScopePlaylistReadCollaborative,
 			spotifyauth.ScopePlaylistModifyPublic,
 			spotifyauth.ScopePlaylistModifyPrivate,
+			spotifyauth.ScopeUserLibraryRead,
 		),
 	)
 	ch    = make(chan *spotify.Client)
@@ -76,9 +77,9 @@ func main() {
 	personalPlaylists := make(map[string][]string)
 	nonPersonalPlaylists := make(map[string][]string)
 
-	fmt.Println("\nDeine Playlists:")
+	//fmt.Println("\nDeine Playlists:")
 	for _, playlist := range playlists.Playlists {
-		fmt.Printf("• %s (ID: %s)\n", playlist.Name, playlist.ID)
+		//fmt.Printf("• %s (ID: %s)\n", playlist.Name, playlist.ID)
 
 		if playlist.Owner.ID == user.ID {
 			// Playlist-Items (Songs) abrufen
@@ -120,7 +121,21 @@ func main() {
 			nonPersonalPlaylists[playlist.Name] = nonPersonalSongIDs
 		}
 	}
-	fmt.Println("\nDeine Personal Playlists:", personalPlaylists)
+	fmt.Println("PersonalPlaylist:", personalPlaylists)
+	fmt.Println("NonPersonalPLaylist:", nonPersonalPlaylists)
+
+	// Get User's saved Albums
+	albums, err := client.CurrentUsersAlbums(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("\nDeine Alben:", albums.Albums)
+	listOfAlbums := make(map[string][]string)
+	// In Map Speichern: Ablumname -> Ablum-Id
+	for _, album := range albums.Albums {
+		listOfAlbums[album.Name] = append(listOfAlbums[album.Name], string(album.ID))
+	}
 
 }
 
